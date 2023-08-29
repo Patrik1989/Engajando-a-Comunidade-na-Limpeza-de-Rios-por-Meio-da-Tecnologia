@@ -15,6 +15,11 @@
             justify-content: center;
             min-height: 100vh;
         }
+        .top-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
         .container {
             background-color: rgba(0, 0, 0, 0.8);
             padding: 20px;
@@ -56,11 +61,31 @@
         }
         .menu-button {
             margin-top: 20px;
-            text-align: center;
+            text-align: left;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
         }
     </style>
 </head>
 <body>
+    <div class="top-left">
+        <a href="Menu.html" class="back-button">Voltar</a>
+    </div>
     <div class="container">
         <h1>Cadastro de Voluntários</h1>
         <form id="volunteerForm" onsubmit="cadastrarVoluntario(event)">
@@ -94,35 +119,35 @@
     </div>
 
     <script>
+        function cadastrarVoluntario(event) {
+            event.preventDefault();
 
-    function cadastrarVoluntario(event) {
-        event.preventDefault();
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value;
+            var age = document.getElementById('age').value;
+            var neighborhood = document.getElementById('neighborhood').value;
+            var river = document.getElementById('river').value;
+            var observation = document.getElementById('observation').value;
 
-        var name = document.getElementById('name').value;
-        var email = document.getElementById('email').value;
-        var phone = document.getElementById('phone').value;
-        var age = document.getElementById('age').value;
-        var neighborhood = document.getElementById('neighborhood').value;
-        var river = document.getElementById('river').value;
-        var observation = document.getElementById('observation').value;
+            var newVolunteer = {
+                name: name,
+                email: email,
+                phone: phone,
+                age: age,
+                neighborhood: neighborhood,
+                river: river,
+                observation: observation
+            };
 
-        var newVolunteer = {
-            name: name,
-            email: email,
-            phone: phone,
-            age: age,
-            neighborhood: neighborhood,
-            river: river,
-            observation: observation
-        };
+            var volunteersList = JSON.parse(localStorage.getItem('volunteersList')) || [];
+            volunteersList.push(newVolunteer);
+            localStorage.setItem('volunteersList', JSON.stringify(volunteersList));
 
-        var volunteersList = JSON.parse(localStorage.getItem('volunteersList')) || [];
-        volunteersList.push(newVolunteer);
-        localStorage.setItem('volunteersList', JSON.stringify(volunteersList));
+            alert('Voluntário cadastrado com sucesso!');
+            window.location.href = 'lista-voluntarios.html'; // Redirecionar para a página de lista de voluntários
+        }
 
-        alert('Voluntário cadastrado com sucesso!');
-        window.location.href = 'lista-voluntarios.html'; // Redirecionar para a página de lista de voluntários
-    }
         function goToListPage() {
             window.location.href = 'lista-voluntarios.html';
         }
