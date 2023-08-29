@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Voluntários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(154, 156, 195, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(133, 104, 176, 0.988);
+            width: 50%;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+        .volunteer {
+            border: 1px solid #000000;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .volunteer h2 {
+            margin: 0;
+        }
+        .volunteer p {
+            margin: 5px 0;
+        }
+        button {
+            background-color: #b12828;
+            color: rgb(255, 255, 255);
+            border: none;
+            font-size: 100%;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff3300;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="Menu.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Lista de Voluntários</h1>
+        <div id="volunteersList"></div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var volunteersList = localStorage.getItem('volunteersList');
+            if (volunteersList) {
+                volunteersList = JSON.parse(volunteersList);
+                var volunteersListDiv = document.getElementById('volunteersList');
+
+                volunteersList.forEach(function(volunteer, index) {
+                    var volunteerDiv = document.createElement('div');
+                    volunteerDiv.classList.add('volunteer');
+
+                    var volunteerTitle = document.createElement('h2');
+                    volunteerTitle.textContent = 'Voluntário ' + (index + 1);
+                    volunteerDiv.appendChild(volunteerTitle);
+
+                    for (var key in volunteer) {
+                        var volunteerInfo = document.createElement('p');
+                        var label = getLabelInPortuguese(key);
+                        volunteerInfo.textContent = label + ': ' + volunteer[key];
+                        volunteerDiv.appendChild(volunteerInfo);
+                    }
+
+                    var editButton = document.createElement('button');
+                    editButton.textContent = 'Editar';
+                    editButton.onclick = function() {
+                        editVolunteer(index);
+                    };
+                    volunteerDiv.appendChild(editButton);
+
+                    var removeButton = document.createElement('button');
+                    removeButton.textContent = 'Remover';
+                    removeButton.onclick = function() {
+                        if (confirm('Tem certeza que deseja remover este voluntário?')) {
+                            removeVolunteer(index);
+                        }
+                    };
+                    volunteerDiv.appendChild(removeButton);
+
+                    volunteersListDiv.appendChild(volunteerDiv);
+                });
+            }
+        }
+
+        function getLabelInPortuguese(key) {
+            var labels = {
+                name: 'Nome',
+                email: 'E-mail',
+                phone: 'Telefone',
+                age: 'Idade',
+                neighborhood: 'Bairro',
+                river: 'Rio',
+                observation: 'Observação'
+            };
+            return labels[key] || key;
+        }
+
+        function removeVolunteer(index) {
+            var volunteersList = JSON.parse(localStorage.getItem('volunteersList'));
+            volunteersList.splice(index, 1);
+            localStorage.setItem('volunteersList', JSON.stringify(volunteersList));
+            alert('Voluntário removido com sucesso!');
+            location.reload();
+        }
+
+        function editVolunteer(index) {
+            window.location.href = 'EditarVoluntários.html?index=' + index;
+        }
+    </script>
+</body>
+</html>
+
+
+

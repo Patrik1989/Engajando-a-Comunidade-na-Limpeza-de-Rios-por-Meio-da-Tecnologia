@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6; /* Fundo azul bebê */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff; /* Texto em branco */
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 96%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 101%;
+            background-color: #007bff; /* Azul do botão */
+            color: #fff;
+            font-size: 100%;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0057b3;/* Azul mais escuro no hover */
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: green;
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="Menu.html" class="back-button">Voltar</a>
+        <h1>Cadastro de Usuário</h1>
+        <form id="signupForm" onsubmit="registerUser(event)">
+            <input type="text" id="newUsername" placeholder="Novo Usuário" required>
+            <input type="password" id="newPassword" placeholder="Nova Senha" required>
+            <input type="password" id="confirmPassword" placeholder="Confirmar Senha" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <p id="signupError" class="error-message">Erro ao cadastrar usuário. Tente novamente.</p>
+        <p id="signupSuccess" class="success-message">Usuário Cadastrado com Sucesso!</p>
+    </div>
+
+    <script>
+        function registerUser(event) {
+            event.preventDefault();
+
+            var newUsername = document.getElementById('newUsername').value;
+            var newPassword = document.getElementById('newPassword').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                document.getElementById('signupError').textContent = 'As senhas não coincidem.';
+                document.getElementById('signupError').style.display = 'block';
+                document.getElementById('signupSuccess').style.display = 'none';
+                return;
+            }
+
+            var users = JSON.parse(localStorage.getItem('users')) || [];
+            var existingUser = users.find(user => user.username === newUsername);
+
+            if (existingUser) {
+                document.getElementById('signupError').textContent = 'Este usuário já existe. Escolha outro nome de usuário.';
+                document.getElementById('signupError').style.display = 'block';
+                document.getElementById('signupSuccess').style.display = 'none';
+                return;
+            }
+
+            users.push({ username: newUsername, password: newPassword });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            document.getElementById('signupForm').reset();
+            document.getElementById('signupSuccess').style.display = 'block';
+            document.getElementById('signupError').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

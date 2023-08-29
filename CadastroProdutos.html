@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6; /* Fundo azul bebê */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 40%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;  /* Texto em branco */
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff;  /* Texto em branco */
+        }
+
+        input, select {
+            width: 100%;
+            padding: 4px;
+            margin-top: 5px;
+            border: 3px solid #92a5a9;
+            border-radius: 4px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #007bff; /* Azul do botão */
+            color: #fff;  /* Texto em branco */
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0057b3; /* Azul mais escuro no hover */
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="Menu.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Cadastro de Produtos</h1>
+        <form id="productForm" onsubmit="cadastrarProduto(event)">
+            <label for="type">Tipo de Produto:</label>
+            <select id="type" required>
+                <option value="insumo">Insumo</option>
+                <option value="equipamento">Equipamento</option>
+            </select>
+
+            <label for="description">Descrição:</label>
+            <input type="text" id="description" required>
+
+            <label for="quantity">Quantidade:</label>
+            <input type="number" id="quantity" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+
+    <script>
+        function cadastrarProduto(event) {
+            event.preventDefault();
+
+            var type = document.getElementById('type').value;
+            var description = document.getElementById('description').value;
+            var quantity = parseInt(document.getElementById('quantity').value);
+
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+
+            // Verifica se já existe um produto com a mesma descrição
+            var existingProduct = products.find(product => product.description === description);
+            if (existingProduct) {
+                alert('Já existe um produto com essa descrição.');
+                return;
+            }
+
+            // Gera um ID automático baseado no número de produtos cadastrados
+            var id = products.length + 1;
+
+            var newProduct = {
+                id: id,
+                type: type,
+                description: description,
+                quantity: quantity
+            };
+
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+
+            alert('Produto cadastrado com sucesso!');
+            document.getElementById('productForm').reset();
+        }
+    </script>
+</body>
+</html>

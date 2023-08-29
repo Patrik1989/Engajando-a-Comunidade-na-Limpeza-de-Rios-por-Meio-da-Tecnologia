@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Voluntário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(154, 156, 195, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.988);
+            width: 25%;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #0b0223;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .bottom-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #b12828;
+            color: rgb(255, 255, 255);
+            border: none;
+            font-size: 100%;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff3300;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="Lista-voluntarios.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Editar Voluntário</h1>
+
+        <form id="editForm">
+            
+        </form>
+
+        <div class="bottom-buttons">
+            <button form="editForm" type="submit">Salvar</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var index = urlParams.get('index');
+
+            if (index !== null) {
+                var volunteersList = JSON.parse(localStorage.getItem('volunteersList'));
+                var editedVolunteer = volunteersList[index];
+
+                var editForm = document.getElementById('editForm');
+
+                for (var key in editedVolunteer) {
+                    var label = getLabelInPortuguese(key);
+
+                    var labelElement = document.createElement('label');
+                    labelElement.textContent = label + ':';
+                    editForm.appendChild(labelElement);
+
+                    var input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = key;
+                    input.value = editedVolunteer[key];
+                    editForm.appendChild(input);
+
+                    editForm.appendChild(document.createElement('br'));
+                }
+
+                editForm.onsubmit = function(event) {
+                    event.preventDefault();
+
+                    var formInputs = editForm.getElementsByTagName('input');
+                    for (var i = 0; i < formInputs.length; i++) {
+                        var input = formInputs[i];
+                        var key = input.name;
+                        editedVolunteer[key] = input.value;
+                    }
+
+                    localStorage.setItem('volunteersList', JSON.stringify(volunteersList));
+                    alert('Voluntário editado com sucesso!');
+                    window.location.href = 'Lista-voluntarios.html';
+                };
+            } else {
+                alert('Índice do voluntário não fornecido.');
+                window.location.href = 'Lista-voluntarios.html';
+            }
+        }
+
+        function getLabelInPortuguese(key) {
+            var labels = {
+                name: 'Nome',
+                email: 'E-mail',
+                phone: 'Telefone',
+                age: 'Idade',
+                neighborhood: 'Bairro',
+                river: 'Rio',
+                observation: 'Observação'
+            };
+            return labels[key] || key;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

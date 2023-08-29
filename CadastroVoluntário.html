@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Voluntários para Limpeza de Rios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6; /* Fundo azul bebê */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #fafafa; /* Azul do botão */
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff; /* Cor do texto em branco */
+        }
+        input, select, textarea {
+            width: 97%;
+            padding: 4px;
+            margin-top: 5px;
+            border: 3px solid #92a5a9;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0057b3;
+        }
+        .menu-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Voluntários</h1>
+        <form id="volunteerForm" onsubmit="cadastrarVoluntario(event)">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" required>
+            
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" required>
+            
+            <label for="phone">Telefone:</label>
+            <input type="tel" id="phone" required oninput="formatPhone(this)" maxlength="14">
+            
+            <label for="age">Idade:</label>
+            <input type="number" id="age" required max="99">
+
+            <label for="neighborhood">Bairro:</label>
+            <input type="text" id="neighborhood" required>
+            
+            <label for="river">Rio:</label>
+            <input type="text" id="river" required>
+            
+            <label for="observation">Observação:</label>
+            <textarea id="observation" rows="4"></textarea>
+            
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <div class="menu-button">
+            <button onclick="goToListPage()">Ver Lista de Voluntários</button>
+        </div>
+    </div>
+
+    <script>
+
+    function cadastrarVoluntario(event) {
+        event.preventDefault();
+
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone').value;
+        var age = document.getElementById('age').value;
+        var neighborhood = document.getElementById('neighborhood').value;
+        var river = document.getElementById('river').value;
+        var observation = document.getElementById('observation').value;
+
+        var newVolunteer = {
+            name: name,
+            email: email,
+            phone: phone,
+            age: age,
+            neighborhood: neighborhood,
+            river: river,
+            observation: observation
+        };
+
+        var volunteersList = JSON.parse(localStorage.getItem('volunteersList')) || [];
+        volunteersList.push(newVolunteer);
+        localStorage.setItem('volunteersList', JSON.stringify(volunteersList));
+
+        alert('Voluntário cadastrado com sucesso!');
+        window.location.href = 'lista-voluntarios.html'; // Redirecionar para a página de lista de voluntários
+    }
+        function goToListPage() {
+            window.location.href = 'lista-voluntarios.html';
+        }
+        
+        function formatPhone(input) {
+            var value = input.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+            }
+            input.value = value;
+        }
+    </script>
+</body>
+</html>

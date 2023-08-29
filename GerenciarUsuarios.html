@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6; /* Fundo azul bebê */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 40%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;  /* Texto em branco */
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #6f72af; 
+            padding: 10px 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.reset {
+            background-color: #ffffff; 
+            margin-right: 10px;
+        }
+
+        button.delete {
+            background-color: #ffffff; 
+            color: rgb(255, 255, 255);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="Menu.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Gerenciamento de Usuários</h1>
+        <ul id="userList"></ul>
+    </div>
+
+    <script>
+        function loadUsers() {
+            var userList = document.getElementById('userList');
+            userList.innerHTML = '';
+
+            var users = JSON.parse(localStorage.getItem('users')) || [];
+
+            users.forEach(function(user) {
+                var listItem = document.createElement('li');
+                listItem.textContent = user.username;
+
+                var resetButton = document.createElement('button');
+                resetButton.textContent = 'Redefinir Senha';
+                resetButton.onclick = function() {
+                    resetPassword(user);
+                };
+                listItem.appendChild(resetButton);
+
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.onclick = function() {
+                    deleteUser(user);
+                };
+                listItem.appendChild(deleteButton);
+
+                userList.appendChild(listItem);
+            });
+        }
+
+        function resetPassword(user) {
+            var newPassword = prompt('Digite a nova senha para ' + user.username + ':');
+            if (newPassword !== null && newPassword.trim() !== '') {
+                var users = JSON.parse(localStorage.getItem('users')) || [];
+                var editedUserIndex = users.findIndex(u => u.username === user.username);
+                users[editedUserIndex].password = newPassword;
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUsers();
+            }
+        }
+
+        function deleteUser(user) {
+            var users = JSON.parse(localStorage.getItem('users')) || [];
+            var updatedUsers = users.filter(u => u.username !== user.username);
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+            loadUsers();
+        }
+
+        window.onload = function() {
+            loadUsers();
+        }
+    </script>
+</body>
+</html>
+
+
+
+

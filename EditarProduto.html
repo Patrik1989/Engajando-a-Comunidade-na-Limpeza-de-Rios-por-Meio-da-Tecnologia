@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edição de Produto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(154, 156, 195, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(133, 104, 176, 0.988);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 4px;
+            margin-top: 5px;
+            border: 3px solid #92a5a9;
+            border-radius: 4px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0057b3;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="lista-produtos.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Edição de Produto</h1>
+        <form id="editProductForm" onsubmit="editProduct(event)">
+            <input type="hidden" id="editProductId">
+            <label for="editDescription">Nova Descrição:</label>
+            <input type="text" id="editDescription" required>
+            
+            <label for="editQuantity">Nova Quantidade:</label>
+            <input type="number" id="editQuantity" required>
+            
+            <button type="submit">Salvar Edição</button>
+        </form>
+    </div>
+
+    <script>
+      
+        // Função para carregar os detalhes do produto a ser editado
+        function loadProductDetails() {
+            var index = getUrlParameter('index');
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+            var product = products[index];
+
+            if (product) {
+                document.getElementById('editProductId').value = index;
+                document.getElementById('editDescription').value = product.description;
+                document.getElementById('editQuantity').value = product.quantity;
+            }
+        }
+
+        // Função para editar o produto
+        function editProduct(event) {
+            event.preventDefault();
+
+            var index = parseInt(document.getElementById('editProductId').value);
+            var newDescription = document.getElementById('editDescription').value;
+            var newQuantity = parseInt(document.getElementById('editQuantity').value);
+
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+            var product = products[index];
+
+            if (product) {
+                product.description = newDescription;
+                product.quantity = newQuantity;
+
+                localStorage.setItem('products', JSON.stringify(products));
+                alert('Produto editado com sucesso!');
+                window.location.href = 'lista-produtos.html'; // Redirecionar para a página lista-produtos
+            }
+        }
+
+        // Função para obter parâmetro da URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        window.onload = function() {
+            loadProductDetails();
+        }
+    </script>
+</body>
+</html>

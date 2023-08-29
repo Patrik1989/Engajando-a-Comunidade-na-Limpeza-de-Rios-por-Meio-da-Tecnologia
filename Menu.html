@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Inicial</title>
+    <style>
+        body {
+            background-color: #c3e0e5; /* Fundo azul-bebê */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .top-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+            font-size: 18px;
+            color: black;
+            background-color: rgba(121, 173, 186, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #loggedInUser {
+            margin-bottom: 10px;
+            font-size: 25px;
+            font-weight:bold;
+        }
+        #currentDateTime {
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1000px; /* Aumentar a largura máxima do conteúdo */
+            padding: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 40px; /* Adicionar margens para alinhar o conteúdo no centro */
+        }
+        h1 {
+            font-size: 49px;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            transition: transform 0.3s;
+        }
+        li:hover {
+            transform: scale(1.05);
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        a:before {
+            content: "▶";
+        }
+        .logout-button {
+            display: inline-block;
+            background-color: #b12828;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 15px ;
+        }
+        .logout-button:hover {
+            background-color: #ff3300;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-left">
+        <p id="loggedInUser"></p>
+        <p id="currentDateTime"></p>
+    </div>
+    <div class="container">
+        <h1>Bem-vindo ao Sistema</h1>
+        <ul id="menuList">
+            <li><a href="CadastroUsuário.html">Cadastro Usuários</a></li>
+            <li><a href="CadastroVoluntário.html">Cadastro Voluntários</a></li>
+            <li><a href="CadastroProdutos.html">Cadastro de Produtos</a></li>
+            <li><a href="lista-voluntarios.html">Lista Voluntários</a></li>
+            <li><a href="lista-produtos.html">Lista Insumos e Equipamentos</a></li>
+            <li><a href="GerenciarUsuarios.html">Gerenciar Usuários</a></li>
+        </ul>
+        <button class="logout-button" onclick="logout()">Encerrar Sessão</button>
+    </div>
+
+    <script>
+        var loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+        if (loggedInUser) {
+            document.getElementById('loggedInUser').textContent = "Usuário: " + loggedInUser.username;
+        } else {
+            // Redirecionar para a página de login se o usuário não estiver logado
+            window.location.href = 'login.html';
+        }
+
+        // Exibir a data e hora atual
+        function updateCurrentDateTime() {
+            var now = new Date();
+            var formattedDateTime = now.toLocaleString();
+            document.getElementById('currentDateTime').textContent = "Data e Hora Atual: " + formattedDateTime;
+        }
+
+        // Atualizar a data e hora a cada segundo
+        setInterval(updateCurrentDateTime, 1000);
+
+        // Função para realizar logout
+        function logout() {
+            localStorage.removeItem('loggedInUser'); // Limpar o usuário logado
+            window.location.href = 'login.html'; // Redirecionar para a página de login
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
