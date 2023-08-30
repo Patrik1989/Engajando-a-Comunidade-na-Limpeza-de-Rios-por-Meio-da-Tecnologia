@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Eventos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0e0e6; /* Fundo azul bebê */
+            margin: 0;
+            display: flex;
+            align-items: flex-start; /* Alinhar no topo */
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin-top: 40px; /* Adicionar margem superior */
+        }
+        h1 {
+            text-align: center;
+            color: #fafafa; /* Branco */
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #212121; /* Cinza escuro */
+            color: #fff;
+        }
+        .expired {
+            background-color: #ff6b6b; /* Vermelho claro */
+        }
+        .upcoming {
+            background-color: #a6d8a8; /* Verde claro */
+        }
+        .delete-button {
+            background-color: #b12828;
+            color: #fff;
+            border: none;
+            font-size: 100%;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #ff3300;
+        }
+        .menu-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 140%;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0057b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="Menu.html" class="back-button">Voltar</a>
+    <div class="container">
+        <h1>Lista de Eventos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Evento</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Dias Restantes</th>
+                    <th>Descrição</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody id="eventsList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var eventsList = JSON.parse(localStorage.getItem('eventsList')) || [];
+            var eventsListTable = document.getElementById('eventsList');
+
+            eventsList.forEach(function(event) {
+                var currentDate = new Date();
+                var eventDate = new Date(event.date);
+                var daysDifference = Math.ceil((eventDate - currentDate) / (1000 * 60 * 60 * 24));
+
+                var eventRow = document.createElement('tr');
+
+                if (daysDifference < 0) {
+                    eventRow.classList.add('expired');
+                } else {
+                    eventRow.classList.add('upcoming');
+                }
+
+                var eventNameCell = document.createElement('td');
+                eventNameCell.textContent = event.name;
+                eventRow.appendChild(eventNameCell);
+
+                var eventDateCell = document.createElement('td');
+                eventDateCell.textContent = formatDate(event.date);
+                eventRow.appendChild(eventDateCell);
+
+                var eventLocationCell = document.createElement('td');
+                eventLocationCell.textContent = event.location;
+                eventRow.appendChild(eventLocationCell);
+
+                var daysLeftCell = document.createElement('td');
+                if (daysDifference < 0) {
+                    daysLeftCell.textContent = 'Vencido';
+                } else {
+                    daysLeftCell.textContent = daysDifference + ' dias';
+                }
+                eventRow.appendChild(daysLeftCell);
+
+                var eventDescriptionCell = document.createElement('td');
+                eventDescriptionCell.textContent = event.description;
+                eventRow.appendChild(eventDescriptionCell);
+
+                var deleteCell = document.createElement('td');
+                var deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.onclick = function() {
+                    deleteEvent(eventsList.indexOf(event));
+                };
+                deleteCell.appendChild(deleteButton);
+                eventRow.appendChild(deleteCell);
+
+                eventsListTable.appendChild(eventRow);
+            });
+        }
+
+        function formatDate(dateString) {
+            var options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('pt-BR', options);
+        }
+
+        function deleteEvent(index) {
+            var eventsList = JSON.parse(localStorage.getItem('eventsList'));
+            eventsList.splice(index, 1);
+            localStorage.setItem('eventsList', JSON.stringify(eventsList));
+            alert('Evento excluído com sucesso!');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
