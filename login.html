@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        body {
+         body {
             background-color: #c3e0e5; /* Fundo azul-bebê */
             font-family: Arial, sans-serif;
             margin: 0;
@@ -59,6 +59,54 @@
             margin-top: 10px;
             display: none;
         }
+
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .popup label,
+        .popup input,
+        .popup button {
+            margin-bottom: 10px;
+        }
+        .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Espaço vertical entre os botões */
+}
+
+button {
+    padding: 10px 20px; /* Ajuste do tamanho dos botões */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botões ocupam a largura máxima da div */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
     </style>
 </head>
 <body>
@@ -67,12 +115,69 @@
         <form id="loginForm" onsubmit="loginUser(event)">
             <input type="text" id="username" placeholder="Usuário" required>
             <input type="password" id="password" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
+            <div class="button-container">
+                <button type="submit">Entrar</button>
+
+                <button id="openRegisterPopup" onclick="openPopup()">Cadastrar Usuário</button>
+            </div>
         </form>
         <p id="loginError" style="color: red; display: none;">Usuário ou senha incorretos. Tente novamente.</p>
-    </div>
+
+        <div class="popup-container" id="registerPopupContainer">
+            <div class="popup">
+                <h2>Cadastrar Novo Usuário</h2>
+                <form id="registerForm" onsubmit="registerUser(event)">
+                    <label for="newUsername">Novo Usuário:</label>
+                    <input type="text" id="newUsername" required>
+                    
+                    <label for="newPassword">Nova Senha:</label>
+                    <input type="password" id="newPassword" required>
+                    
+                    <label for="confirmNewPassword">Confirmar Senha:</label>
+                    <input type="password" id="confirmNewPassword" required>
+                    
+                    <button type="submit">Cadastrar</button>
+                </form>
+                <button onclick="closePopup()">Fechar</button>
+            </div>
+        </div>
 
     <script>
+        // Função para abrir o pop-up
+        function openPopup() {
+            document.getElementById('registerPopupContainer').style.display = 'flex';
+        }
+
+        // Função para fechar o pop-up
+        function closePopup() {
+            document.getElementById('registerPopupContainer').style.display = 'none';
+        }
+
+       function registerUser(event) {
+    event.preventDefault();
+
+    var newUsername = document.getElementById('newUsername').value;
+    var newPassword = document.getElementById('newPassword').value;
+    var confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+    if (newPassword !== confirmNewPassword) {
+        alert('As senhas não coincidem. Por favor, confirme a senha corretamente.');
+        return;
+    }
+
+    var newUsers = {
+        username: newUsername,
+        password: newPassword
+    };
+
+    var usersList = JSON.parse(localStorage.getItem('users')) || [];
+    usersList.push(newUsers);
+    localStorage.setItem('users', JSON.stringify(usersList));
+
+    alert('Usuário cadastrado com sucesso!');
+    document.getElementById('registerForm').reset(); // Limpar o formulário
+}
+
         function loginUser(event) {
             event.preventDefault();
 
@@ -93,5 +198,3 @@
     </script>
 </body>
 </html>
-
-
